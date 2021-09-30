@@ -9,17 +9,75 @@ class App extends Component {
     }
   }
 
+  updateItem(key, value) {
+    // update react state
+    this.setState({
+      [key]: value
+    });
+  }
+
+  addItem() {
+    //create item with a unique ID
+
+    const newItem = {
+      id : 1+ Math.random(), 
+      value: this.state.newItem.slice()
+    }
+
+    // copy of current list of items
+    const list = [...this.state.list];
+
+    // add item to the list
+    list.push(newItem)
+
+    // update state with new list and reset newItem input
+    this.setState({
+      list, 
+      newItem:""  
+    })
+  }
+
+  deleteItem(id) {
+    const list = [...this.state.list];
+
+    // filter out the item that is deleted
+    const updatedList = list.filter(item => item.id !== id); 
+
+    this.setState({
+      list: updatedList
+    })
+  }
 
   render() {
     return (
       <div className="App">
-        <h1>Add an Item</h1>
-        <input
-          type= "text"
-          placeholder = "Type item here..."
-          value = {this.state.newItem}
-          onChange = {e => this.updateItem("newItem", e.target.value)}
-        />
+        <div>
+          <h1>Add an Item</h1>
+          <input
+            type= "text"
+            placeholder = "Type item here..."
+            value = {this.state.newItem}
+            onChange = {e => this.updateItem("newItem", e.target.value)}
+          />
+          <button
+            onClick =  {() => this.addItem() }
+          > 
+          Add
+          </button>
+          <br/>
+          <ul>
+            {this.state.list.map(item => {
+              return(
+                <li key = {item.id}> 
+                  {item.value}
+                  <button
+                    onClick = {() => this.deleteItem(item.id)} 
+                  >X</button>
+                </li> 
+              )
+            })}
+          </ul>
+        </div>  
       </div>
     );
   }
